@@ -1,6 +1,6 @@
 #include <iostream>
 #include <filesystem>
-#include "BookmarkFileRepository.h"
+#include "../BookmarkFileRepository.h"
 
 int main(const int argc, char* argv[]) try {
     if (argc != 3 || argc != 2) {
