@@ -1,24 +1,62 @@
-## Anchor
+# Anchor
 
 Anchor is a lightweight directory bookmarking utility built for the Fish shell.
 
 ## Requirements
 
-Fish must be installed on your system.
+- Fish shell
+
+## Usage
+
+```bash
+anc <command> [arguments]
+```
 
 ## Commands
 
-**'+'** -> add a bookmark.
+### Add a Bookmark
 
-Example: 'anc + name usr/example/directory/'
+```bash
+anc + <name> [directory]
+```
 
-**Arguments:**
-1. name -> name of the bookmark to add.
-2. directory -> directory to bookmark (leave blank to use current working directory)
+Creates a new directory bookmark.
 
-**'+'** -> remove a bookmark.
+#### Arguments
 
-Example: 'anc - name'
+- `<name>` — Name of the bookmark.
+- `[directory]` — Directory to bookmark. If omitted, Anchor uses the current working directory.
 
-**Arguments:**
-1. name -> name of the bookmark to remove.
+#### Examples
+
+Bookmark a specific directory:
+
+```bash
+anc + projects ~/Documents/projects
+```
+
+Bookmark the current directory:
+
+```bash
+anc + projects
+```
+
+---
+
+### Remove a Bookmark
+
+```bash
+anc - <name>
+```
+
+Removes an existing bookmark.
+
+#### Arguments
+
+- `<name>` — Name of the bookmark to remove.
+
+#### Example
+
+```bash
+anc - projects
+```
