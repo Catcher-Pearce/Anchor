@@ -3,4 +3,6 @@ project(Bookmark)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Bookmark main.cpp)
+add_executable(Bookmark Anchor.cpp
+        BookmarkFileRepository.cpp
+        BookmarkFileRepository.h)
