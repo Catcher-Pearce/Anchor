@@ -1,7 +1,7 @@
 //
 // Created by catcherpearce on 9/27/26.
 //
-#include "../BookmarkFileRepository.h"
+#include "BookmarkFileRepository.h"
 
 #include <fstream>
 #include <iomanip>
@@ -13,6 +13,7 @@
 BookmarkFileRepository::BookmarkFileRepository() {
     std::filesystem::path dataDirectory;
     const char* xdgDataHome = std::getenv("XDG_DATA_HOME");
+
     if (xdgDataHome && *xdgDataHome && std::filesystem::path(xdgDataHome).is_absolute()) {
         dataDirectory = xdgDataHome;
     } else {
@@ -23,17 +24,20 @@ BookmarkFileRepository::BookmarkFileRepository() {
         dataDirectory = std::filesystem::path(userHome) / ".local" / "share";
     }
 
-    const auto bookmarksDirectory = dataDirectory / "fishmark";
+    const auto bookmarksDirectory = dataDirectory / "anchor";
     bookmarksFilePath = bookmarksDirectory / "bookmarks.txt";
     std::filesystem::create_directories(bookmarksDirectory);
     std::ofstream file(bookmarksFilePath, std::ios::app);
+
     if (!file.is_open()) {
         throw std::runtime_error("Could not open " + bookmarksFilePath.string() + " for initialization");
     }
+
     file.close();
     if (file.fail()) {
         throw std::runtime_error("Could not close " + bookmarksFilePath.string() + " after initialization");
     }
+
     loadBookmarks();
 };
 
@@ -76,7 +80,7 @@ bool BookmarkFileRepository::addBookmark(const std::string& name, std::filesyste
         return false;
     }
 
-    bookmarkFiles << name << " " << path << std::endl;
+    bookmarkFiles << name << " " << path << "\n";
     bookmarkFiles.close();
     if (bookmarkFiles.fail()) {
         std::cerr << "Could not write or close " << bookmarksFilePath << "\n";
@@ -102,50 +106,59 @@ bool BookmarkFileRepository::removeBookmark(const std::string &name) {
         return false;
     }
 
-    std::stringstream bookmarksString;
-    std::ifstream bookmarkFiles(bookmarksFilePath);
-    if (!bookmarkFiles.is_open()) {
+    std::ifstream bookmarkFile(bookmarksFilePath);
+    if (!bookmarkFile.is_open()) {
         std::cerr << "Could not open " << bookmarksFilePath << " for reading\n";
         return false;
     }
+
     std::string line;
     std::string currName;
     size_t firstSpace;
 
-    while (std::getline(bookmarkFiles, line)) {
+    auto tempPath = bookmarksFilePath;
+    tempPath += ".tmp";
+
+    std::ofstream output(tempPath, std::ios::trunc);
+    if (!output.is_open()) {
+        std::cerr << "Could not create temporary bookmarks file\n";
+        return false;
+    }
+
+    while (std::getline(bookmarkFile, line)) {
         firstSpace = line.find(' ');
         currName = line.substr(0, firstSpace);
 
         if (currName != name) {
-            bookmarksString << line << std::endl;
+            output << line << "\n";
         }
     }
 
-    if (bookmarkFiles.bad() || (bookmarkFiles.fail() && !bookmarkFiles.eof())) {
-        std::cerr << "Could not read " << bookmarksFilePath << "; removal cancelled\n";
-        return false;
-    }
-
-    bookmarkFiles.clear();
-    bookmarkFiles.close();
-    if (bookmarkFiles.fail()) {
-        std::cerr << "Could not close " << bookmarksFilePath << " after reading\n";
-        return false;
-    }
-
-    std::ofstream output(bookmarksFilePath, std::ios::trunc);
-    if (!output) {
-        std::cerr << "Could not open " << bookmarksFilePath << " for rewriting\n";
-        return false;
-    }
-
-    output << bookmarksString.str();
     output.close();
     if (output.fail()) {
-        std::cerr << "Could not write or close " << bookmarksFilePath << "\n";
+        std::filesystem::remove(tempPath);
+        std::cerr << "Could not write or close " << tempPath << "\n";
         return false;
     }
-    loadBookmarks();
+
+    if (bookmarkFile.bad() ||
+    (bookmarkFile.fail() && !bookmarkFile.eof())) {
+        output.close();
+        std::error_code cleanupError;
+        std::filesystem::remove(tempPath, cleanupError);
+        std::cerr << "Could not read bookmarks; removal cancelled\n";
+        return false;
+    }
+
+    bookmarkFile.close();
+
+    std::error_code error;
+    std::filesystem::rename(tempPath, bookmarksFilePath, error);
+    if (error) {
+        std::cerr << "Could not replace bookmarks: "
+                  << error.message() << '\n';
+        return false;
+    }
 
     return true;
 }
