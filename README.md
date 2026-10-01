@@ -10,7 +10,7 @@ Fish must be installed on your system.
 
 '+' -> add a bookmark.
 
-Example: '+ name usr/example/directory/'
+Example: 'anc + name usr/example/directory/'
 
 Arguments:
 1. name -> name of the bookmark to add.
@@ -18,7 +18,7 @@ Arguments:
 
 '+' -> remove a bookmark.
 
-Example: '- name'
+Example: 'anc - name'
 
 Arguments:
 1. name -> name of the bookmark to remove.
