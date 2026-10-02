@@ -67,3 +67,38 @@ Removes an existing bookmark.
 ```bash
 anc - projects
 ```
+
+### Go to a Bookmark
+
+```bash
+anc <name>
+```
+
+Changes working directing to path specified by the bookmark name.
+
+#### Arguments
+
+- `<name>` — Name of the bookmark to go to.
+
+#### Example
+
+```bash
+anc projects
+```
+
+## Additional
+
+### Viewing all Bookmarks
+
+**Anchor comes preinstalled with a single bookmark: The directory containing your bookmark persistence file.**
+
+To go to this directory, use:
+
+```bash
+anc anchors
+```
+
+Look for the txt file named 'bookmarks.txt'.
+
+This is the file containing all of your bookmarks, you can view and edit them from here.
+
