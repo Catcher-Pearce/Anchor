@@ -1,0 +1,5 @@
+/anchor
+/build/
+/cmake-build-*/
+/release/
+/anchor-*.tar.gz

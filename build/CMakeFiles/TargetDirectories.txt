@@ -1,3 +1,0 @@
-/home/catcherpearce/CLionProjects/Anchor/build/CMakeFiles/Bookmark.dir
-/home/catcherpearce/CLionProjects/Anchor/build/CMakeFiles/edit_cache.dir
-/home/catcherpearce/CLionProjects/Anchor/build/CMakeFiles/rebuild_cache.dir

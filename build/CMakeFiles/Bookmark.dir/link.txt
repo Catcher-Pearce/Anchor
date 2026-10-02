@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/Bookmark.dir/link.d CMakeFiles/Bookmark.dir/src/Anchor.cpp.o CMakeFiles/Bookmark.dir/src/BookmarkFileRepository.cpp.o -o Bookmark
