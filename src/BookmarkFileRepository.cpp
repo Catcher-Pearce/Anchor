@@ -27,10 +27,18 @@ BookmarkFileRepository::BookmarkFileRepository() {
     const auto bookmarksDirectory = dataDirectory / "anchor";
     bookmarksFilePath = bookmarksDirectory / "bookmarks.txt";
     std::filesystem::create_directories(bookmarksDirectory);
-    std::ofstream file(bookmarksFilePath, std::ios::app);
+    std::ofstream file;
 
+    const bool alreadyExists = std::filesystem::exists(bookmarksFilePath);
+
+    file.open(bookmarksFilePath, std::ios::app);
     if (!file.is_open()) {
-        throw std::runtime_error("Could not open " + bookmarksFilePath.string() + " for initialization");
+        throw std::runtime_error("Could not open bookmarks file");
+    }
+
+    if (!alreadyExists) {
+        file << "// This is your bookmark persistence file. Bookmarks are stored in this format '<name> <directory>'\n";
+        file << "anchors " << bookmarksDirectory << '\n';
     }
 
     file.close();
@@ -51,6 +59,9 @@ void BookmarkFileRepository::loadBookmarks() {
     std::string bookmarkLine;
 
     while (std::getline(bookmarkFiles, bookmarkLine)) {
+        if (bookmarkLine.starts_with("//")) {
+            continue;
+        }
         std::stringstream stringStream(bookmarkLine);
         std::string name;
         std::string path;
@@ -126,6 +137,10 @@ bool BookmarkFileRepository::removeBookmark(const std::string &name) {
     }
 
     while (std::getline(bookmarkFile, line)) {
+        if (line.starts_with("//")) {
+            output << line << '\n';
+            continue;
+        }
         firstSpace = line.find(' ');
         currName = line.substr(0, firstSpace);
 
@@ -146,7 +161,7 @@ bool BookmarkFileRepository::removeBookmark(const std::string &name) {
         output.close();
         std::error_code cleanupError;
         std::filesystem::remove(tempPath, cleanupError);
-        std::cerr << "Error: Could not read anchors; removal cancelled\n";
+        std::cerr << "Error: Could not read bookmarks; removal cancelled\n";
         return false;
     }
 
