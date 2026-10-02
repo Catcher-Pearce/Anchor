@@ -65,8 +65,16 @@ void BookmarkFileRepository::loadBookmarks() {
         std::stringstream stringStream(bookmarkLine);
         std::string name;
         std::string path;
+
         if (!(stringStream >> name >> std::quoted(path))) {
-            std::cerr << "Error: Invalid bookmark entry in " << bookmarksFilePath << '\n';
+            std::cerr << "Error: Invalid bookmark entry\n";
+            continue;
+        }
+
+        std::error_code error;
+        if (!std::filesystem::is_directory(path, error)) {
+            std::cerr << "Error: Cannot access bookmarked directory: "
+                      << path << '\n';
             continue;
         }
 
