@@ -1,2 +1,2 @@
-// This is your bookmark persistence file. Bookmarks are stored in this format '<name> <directory>
+// This is your bookmark persistence file. Bookmarks are stored in this format '<name> <directory>'
 anchors "/home/usr/.local/share/anchor"
