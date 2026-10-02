@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 function anc
-    set -l output (/usr/local/bin/Fishmark $argv)
+    set -l output ("$HOME/.local/bin/anchor" $argv)
     or return 1
 
     if test -n "$output"; and test -d "$output"

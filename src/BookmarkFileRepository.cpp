@@ -44,7 +44,7 @@ BookmarkFileRepository::BookmarkFileRepository() {
 void BookmarkFileRepository::loadBookmarks() {
     std::ifstream bookmarkFiles(bookmarksFilePath);
     if (!bookmarkFiles.is_open()) {
-        std::cerr << "Could not open " << bookmarksFilePath << " for reading\n";
+        std::cerr << "Error: Could not open " << bookmarksFilePath << " for reading\n";
         return;
     }
     decltype(bookmarks) loadedBookmarks;
@@ -55,35 +55,35 @@ void BookmarkFileRepository::loadBookmarks() {
         std::string name;
         std::string path;
         if (!(stringStream >> name >> std::quoted(path))) {
-            std::cerr << "Invalid bookmark entry in " << bookmarksFilePath << '\n';
+            std::cerr << "Error: Invalid bookmark entry in " << bookmarksFilePath << '\n';
             continue;
         }
 
         loadedBookmarks[name] = std::filesystem::path(path);
     }
     if (bookmarkFiles.bad() || (bookmarkFiles.fail() && !bookmarkFiles.eof())) {
-        std::cerr << "Could not read " << bookmarksFilePath << "\n";
+        std::cerr << "Error: Could not read " << bookmarksFilePath << "\n";
         return;
     }
     bookmarks = std::move(loadedBookmarks);
 }
 
-bool BookmarkFileRepository::addBookmark(const std::string& name, std::filesystem::path& path) {
+bool BookmarkFileRepository::addBookmark(const std::string& name, const std::filesystem::path path) {
     if (bookmarks.contains(name)) {
-        std::cerr << "bookmark already exists, replacing it";
-        return false;
+        std::cerr << "Error: bookmark already exists, replacing it\n";
+        removeBookmark(name);
     }
 
     std::ofstream bookmarkFiles(bookmarksFilePath, std::ios::app);
     if (!bookmarkFiles.is_open()) {
-        std::cerr << "Could not open " << bookmarksFilePath << " for appending\n";
+        std::cerr << "Error: Could not open " << bookmarksFilePath << " for appending\n";
         return false;
     }
 
     bookmarkFiles << name << " " << path << "\n";
     bookmarkFiles.close();
     if (bookmarkFiles.fail()) {
-        std::cerr << "Could not write or close " << bookmarksFilePath << "\n";
+        std::cerr << "Error: Could not write or close " << bookmarksFilePath << "\n";
         return false;
     }
 
@@ -92,7 +92,7 @@ bool BookmarkFileRepository::addBookmark(const std::string& name, std::filesyste
 
 bool BookmarkFileRepository::getBookmark(const std::string &name) {
     if (!bookmarks.contains(name)) {
-        std::cerr << "bookmark not found";
+        std::cerr << "Error: Bookmark not found";
         return false;
     }
 
@@ -102,13 +102,13 @@ bool BookmarkFileRepository::getBookmark(const std::string &name) {
 
 bool BookmarkFileRepository::removeBookmark(const std::string &name) {
     if (!bookmarks.contains(name)) {
-        std::cerr << "bookmark not found";
+        std::cerr << "Error: Bookmark not found";
         return false;
     }
 
     std::ifstream bookmarkFile(bookmarksFilePath);
     if (!bookmarkFile.is_open()) {
-        std::cerr << "Could not open " << bookmarksFilePath << " for reading\n";
+        std::cerr << "Error: Could not open " << bookmarksFilePath << " for reading\n";
         return false;
     }
 
@@ -121,7 +121,7 @@ bool BookmarkFileRepository::removeBookmark(const std::string &name) {
 
     std::ofstream output(tempPath, std::ios::trunc);
     if (!output.is_open()) {
-        std::cerr << "Could not create temporary bookmarks file\n";
+        std::cerr << "Error: Could not create temporary bookmarks file\n";
         return false;
     }
 
@@ -137,7 +137,7 @@ bool BookmarkFileRepository::removeBookmark(const std::string &name) {
     output.close();
     if (output.fail()) {
         std::filesystem::remove(tempPath);
-        std::cerr << "Could not write or close " << tempPath << "\n";
+        std::cerr << "Error: Could not write or close " << tempPath << "\n";
         return false;
     }
 
@@ -146,7 +146,7 @@ bool BookmarkFileRepository::removeBookmark(const std::string &name) {
         output.close();
         std::error_code cleanupError;
         std::filesystem::remove(tempPath, cleanupError);
-        std::cerr << "Could not read bookmarks; removal cancelled\n";
+        std::cerr << "Error: Could not read anchors; removal cancelled\n";
         return false;
     }
 
@@ -155,7 +155,7 @@ bool BookmarkFileRepository::removeBookmark(const std::string &name) {
     std::error_code error;
     std::filesystem::rename(tempPath, bookmarksFilePath, error);
     if (error) {
-        std::cerr << "Could not replace bookmarks: "
+        std::cerr << "Error: Could not replace bookmarks: "
                   << error.message() << '\n';
         return false;
     }

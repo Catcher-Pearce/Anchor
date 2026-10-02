@@ -24,7 +24,7 @@ public:
      * @param the file path that the bookmark points to
      * @return bool whether the function succeeded or not
      */
-    bool addBookmark(const std::string& name, std::filesystem::path& path);
+    bool addBookmark(const std::string& name, const std::filesystem::path path);
 
     /**
      * @brief removes a bookmark from the users bookmark persistence file
