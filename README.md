@@ -6,18 +6,18 @@ Anchor is a lightweight directory bookmarking utility built for the Fish shell.
 
 - Fish shell
 
-## Usage
-
-```bash
-anc <command> [arguments]
-```
-
 ## Installation
 
 1. Download the correct release for your computer
 2. Extract the tar.gz folder
 3. Run 'install.sh' in the scripts folder
 4. Done!
+
+## Usage
+
+```bash
+anc <command> [arguments]
+```
 
 ## Commands
 
