@@ -68,6 +68,8 @@ Removes an existing bookmark.
 anc - projects
 ```
 
+---
+
 ### Go to a Bookmark
 
 ```bash
@@ -85,6 +87,8 @@ Changes working directing to path specified by the bookmark name.
 ```bash
 anc projects
 ```
+
+---
 
 ## Additional
 
