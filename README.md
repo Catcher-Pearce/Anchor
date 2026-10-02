@@ -15,8 +15,9 @@ anc <command> [arguments]
 ## Installation
 
 1. Download the correct release for your computer
-2. Run 'install.sh' in the scripts folder
-3. Done!
+2. Extract the tar.gz folder
+3. Run 'install.sh' in the scripts folder
+4. Done!
 
 ## Commands
 
