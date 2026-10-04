@@ -16,6 +16,9 @@ install -m 755 "$script_dir/../anchor" "$HOME/.local/bin/anchor"
 printf 'Installing the anc Fish function...\n'
 install -m 644 "$script_dir/Anchor.fish" \
     "$HOME/.config/fish/functions/anc.fish"
+install -m 644 "$script_dir/AnchorCompletions.fish" \
+    "$HOME/.config/fish/completions/anc.fish"
+
 
 cat <<'EOF'
 
