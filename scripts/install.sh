@@ -9,7 +9,8 @@ if ! command -v fish >/dev/null 2>&1; then
 fi
 
 printf 'Creating installation directories...\n'
-mkdir -p "$HOME/.local/bin" "$HOME/.config/fish/functions"
+mkdir -p "$HOME/.local/bin" "$HOME/.config/fish/functions" \
+    "$HOME/.config/fish/completions"
 
 printf 'Installing Anchor to %s...\n' "$HOME/.local/bin/anchor"
 install -m 755 "$script_dir/../anchor" "$HOME/.local/bin/anchor"
